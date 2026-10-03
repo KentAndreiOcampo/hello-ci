@@ -30,6 +30,6 @@ describe('E2E Home Page Test', () => {
     const header = await driver.wait(until.elementLocated(By.tagName('h1')), 10000);
     const text = await header.getText();
 
-    expect(text).toBe('Welcome to CI/CD');
+    expect(text).toBe('Hello DevOps');
   });
 });
