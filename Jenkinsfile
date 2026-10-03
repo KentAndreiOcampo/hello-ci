@@ -8,6 +8,7 @@ pipeline {
     environment {
         SELENIUM_HOST = 'selenium'
         APP_URL = 'http://jenkins:3000'
+        BUILD_ID = 'dontKillMe' // Prevents Jenkins from killing background process
     }
 
     stages {
@@ -17,16 +18,13 @@ pipeline {
             }
         }
 
-        stage('Start Application') {
-            steps {
-                sh 'node src/app.js &'
-                sleep 5
-            }
-        }
-
         stage('UI Test') {
             steps {
-                sh 'npx jest tests/e2e/home.test.js --reporters=default --reporters=jest-junit'
+                sh '''
+                    nohup node src/app.js > app.log 2>&1 &
+                    sleep 3
+                    npx jest tests/e2e/home.test.js --reporters=default --reporters=jest-junit
+                '''
             }
         }
     }
@@ -34,6 +32,7 @@ pipeline {
     post {
         always {
             junit 'junit.xml'
+            sh 'pkill -f "node src/app.js" || true' // Clean up background server
         }
     }
 }
