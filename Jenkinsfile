@@ -1,31 +1,39 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'node20'
+    triggers {
+        pollSCM('* * * * *')
+    }
+
+    environment {
+        SELENIUM_HOST = 'selenium'
+        APP_URL = 'http://jenkins:3000'
     }
 
     stages {
-        stage('Install') {
+        stage('Install Dependencies') {
             steps {
-                sh 'rm -rf node_modules'
                 sh 'npm install'
             }
         }
 
-        stage('Check Jest') {
+        stage('Start Application') {
             steps {
-                sh 'node -v'
-                sh 'npm -v'
-                sh 'npm ls jest jest-circus'
-                sh 'ls -la node_modules/jest-circus/build/'
+                sh 'node src/app.js &'
+                sleep 5
             }
         }
 
-        stage('Test') {
+        stage('UI Test') {
             steps {
-                sh 'npm test'
+                sh 'npx jest tests/e2e/home.test.js --reporters=default --reporters=jest-junit'
             }
+        }
+    }
+
+    post {
+        always {
+            junit 'junit.xml'
         }
     }
 }
