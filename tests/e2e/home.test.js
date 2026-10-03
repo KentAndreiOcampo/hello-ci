@@ -1,6 +1,6 @@
 const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
-//testing
+
 describe('E2E Home Page Test', () => {
   let driver;
 
@@ -25,7 +25,7 @@ describe('E2E Home Page Test', () => {
 
   test('Check header text', async () => {
     const appUrl = process.env.APP_URL || 'http://host.docker.internal:3000';
-    expect(text).toBe('Hello DevOps');
+    await driver.get(appUrl);
 
     const header = await driver.wait(until.elementLocated(By.tagName('h1')), 10000);
     const text = await header.getText();

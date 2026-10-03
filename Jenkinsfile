@@ -8,7 +8,7 @@ pipeline {
     environment {
         SELENIUM_HOST = 'selenium'
         APP_URL = 'http://jenkins:3000'
-        BUILD_ID = 'dontKillMe' // Prevents Jenkins from killing background process
+        BUILD_ID = 'dontKillMe'
     }
 
     stages {
@@ -32,7 +32,7 @@ pipeline {
     post {
         always {
             junit 'junit.xml'
-            sh 'pkill -f "node src/app.js" || true' // Clean up background server
+            sh 'pkill -f "node src/app.js" || true'
         }
     }
 }
