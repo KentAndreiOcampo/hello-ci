@@ -25,7 +25,7 @@ describe('E2E Home Page Test', () => {
 
   test('Check header text', async () => {
     const appUrl = process.env.APP_URL || 'http://host.docker.internal:3000';
-    await driver.get(appUrl);
+    expect(text).toBe('Hello DevOps');
 
     const header = await driver.wait(until.elementLocated(By.tagName('h1')), 10000);
     const text = await header.getText();
